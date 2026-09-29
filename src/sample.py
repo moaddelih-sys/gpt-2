@@ -33,6 +33,7 @@ def top_p_logits(logits, p):
         tf.maximum(tf.reduce_sum(tf.cast(cumulative_probs <= p, tf.int32), axis=-1) - 1, 0),
     ], axis=-1)
     min_values = tf.gather_nd(sorted_logits, indices)
+    min_values = min_values[:, tf.newaxis]
     return tf.where(
         logits < min_values,
         tf.ones_like(logits) * -1e10,
