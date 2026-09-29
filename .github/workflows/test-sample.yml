@@ -1,0 +1,25 @@
+name: TensorFlow 1.15 regression
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  test-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Run sample regression without model downloads
+        run: |
+          docker run --rm --network none \
+            --volume "$GITHUB_WORKSPACE:/workspace:ro" \
+            --workdir /workspace \
+            tensorflow/tensorflow:1.15.0-py3 \
+            python src/test_sample.py
